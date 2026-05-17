@@ -163,23 +163,14 @@ func TestGetByClient(t *testing.T) {
 	// убедитесь в отсутствии ошибки
 	require.NoError(t, err)
 	// убедитесь, что количество полученных посылок совпадает с количеством добавленных
-	assert.Equal(t, len(parcelMap), len(storedParcels))
+	assert.Len(t, storedParcels, len(parcelMap))
 	// check
 	for _, parcel := range storedParcels {
 		// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
 		// убедитесь, что все посылки из storedParcels есть в parcelMap
-		var isHere bool
-		for _, value := range parcelMap {
-			if value == parcel {
-				isHere = true
-				break
-			}
-		}
+		_, isHere := parcelMap[parcel.Number]
 		assert.True(t, isHere)
 		// убедитесь, что значения полей полученных посылок заполнены верно
-		assert.Equal(t, parcelMap[parcel.Number].Client, parcel.Client)
-		assert.Equal(t, parcelMap[parcel.Number].Status, parcel.Status)
-		assert.Equal(t, parcelMap[parcel.Number].Address, parcel.Address)
-		assert.Equal(t, parcelMap[parcel.Number].CreatedAt, parcel.CreatedAt)
+		assert.Equal(t, parcelMap[parcel.Number], parcel)
 	}
 }
